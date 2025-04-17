@@ -1,0 +1,80 @@
+{# templates/commande/validee.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket #{{ commande.id }}</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace;
+            width: 80mm;
+            margin: 0 auto;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .header, .footer {
+            text-align: center;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th { text-align: left; }
+        .total { font-weight: bold; border-top: 1px dashed #000; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h3>MON RESTAURANT</h3>
+        <p>Ticket #{{ commande.id }}</p>
+        <p>{{ commande.dateCreation|date('d/m/Y H:i') }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Article</th>
+                <th>Qte</th>
+                <th>Prix</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in commande.elements %}
+            <tr>
+                <td>{{ item.produit.nom }}</td>
+                <td>{{ item.quantite }}</td>
+                <td>{{ (item.prixUnitaire * item.quantite)|format_currency('EUR') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="total">Total: {{ commande.montantTotal|format_currency('EUR') }}</p>
+
+   
+    <div class="barcode-container">
+    {{ barcode_svg|raw }}
+    <div class="barcode-text">CMD-{{ commande.id }}</div>
+</div>
+
+<style>
+    .barcode-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .barcode-container svg {
+        height: 60px;
+        width: 100%;
+    }
+    .barcode-text {
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
+ <div class="footer">
+        Merci pour votre commande !
+    </div>
+</body>
+</html>

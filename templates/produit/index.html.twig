@@ -12,25 +12,25 @@
       margin-bottom: 3rem;
       text-align: center;
     }
-    
+
     .product-card {
       margin-bottom: 2rem;
       border: none;
       border-radius: 12px;
       overflow: hidden;
     }
-    
+
     .product-img {
       height: 180px;
       object-fit: cover;
     }
-    
+
     .product-price {
       color: var(--primary-color);
       font-weight: bold;
       font-size: 1.2rem;
     }
-    
+
     .btn-add-to-cart {
       background: var(--primary-color);
       color: white;
@@ -40,9 +40,14 @@
       border-radius: 8px;
       transition: all 0.3s ease;
     }
-    
+
     .btn-add-to-cart:hover {
       background: var(--dark-color);
+    }
+
+    .btn-view-cart {
+      margin-bottom: 2rem;
+      float: right;
     }
   </style>
 {% endblock %}
@@ -55,6 +60,12 @@
 </div>
 
 <div class="container">
+  <div class="text-end mb-4">
+    <a href="{{ path('afficher_panier') }}" class="btn btn-secondary btn-view-cart">
+      🛒 Voir le panier
+    </a>
+  </div>
+
   <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for produit in produits %}
     <div class="col">
@@ -67,9 +78,9 @@
         <div class="card-footer bg-white border-0">
           <div class="d-flex justify-content-between align-items-center">
             <span class="product-price">{{ produit.prix|format_currency('EUR') }}</span>
-            <button class="btn btn-add-to-cart">
+            <a href="{{ path('ajouter_au_panier', {'id': produit.id}) }}" class="btn btn-add-to-cart">
               <i class="fas fa-cart-plus"></i> Ajouter
-            </button>
+            </a>
           </div>
         </div>
       </div>

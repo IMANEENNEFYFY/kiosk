@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket de commande #{{ commande.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        .total { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Commande validée !</h1>
+    <h2>Merci pour votre commande</h2>
+
+    <p><strong>Numéro de commande :</strong> #{{ commande.id }}</p>
+    <p><strong>Date :</strong> {{ commande.dateCreation|date('d/m/Y H:i') }}</p>
+    <p><strong>Montant total :</strong> {{ commande.montantTotal|format_currency('EUR') }}</p>
+
+    <h3>Détails de la commande :</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in commande.elements %}
+            <tr>
+                <td>{{ element.produit.nom }}</td>
+                <td>{{ element.quantite }}</td>
+                <td>{{ element.prixUnitaire|format_currency('EUR') }}</td>
+                <td>{{ (element.prixUnitaire * element.quantite)|format_currency('EUR') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="total">Total : {{ commande.montantTotal|format_currency('EUR') }}</p>
+</body>
+</html>
