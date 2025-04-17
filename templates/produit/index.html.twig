@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+    .products-header {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{{ asset('images/categories/' ~ categorie.image) }}');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 4rem 0;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+    
+    .product-card {
+      margin-bottom: 2rem;
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .product-img {
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .product-price {
+      color: var(--primary-color);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .btn-add-to-cart {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-add-to-cart:hover {
+      background: var(--dark-color);
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="products-header">
+  <div class="container">
+    <h1 class="display-4">{{ categorie.nom }}</h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for produit in produits %}
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="{{ asset('images/produits/' ~ produit.image) }}" class="card-img-top product-img" alt="{{ produit.nom }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ produit.nom }}</h5>
+          <p class="card-text">{{ produit.description|slice(0, 80) ~ '...' }}</p>
+        </div>
+        <div class="card-footer bg-white border-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="product-price">{{ produit.prix|format_currency('EUR') }}</span>
+            <button class="btn btn-add-to-cart">
+              <i class="fas fa-cart-plus"></i> Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

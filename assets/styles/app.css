@@ -1,3 +1,29 @@
+/* Import de Bootstrap */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  --primary-color: #ff6b6b;
+  --secondary-color: #4ecdc4;
+  --dark-color: #292f36;
+  --light-color: #f7fff7;
+}
+
 body {
-    background-color: skyblue;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f8f9fa;
+  color: var(--dark-color);
+}
+
+/* Style global des cartes */
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }

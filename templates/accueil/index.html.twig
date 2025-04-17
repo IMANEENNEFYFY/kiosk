@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <style>
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+    
+    .logo {
+      width: 200px;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+    
+    .btn-commander {
+      background: white;
+      color: var(--primary-color);
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.5rem;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-commander:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+<div class="hero-section">
+  <img src="{{ asset('images/logo.png') }}" alt="Logo Restaurant" class="logo">
+  <h1 class="display-4 mb-4">Bienvenue au Restaurant</h1>
+  <a href="{{ path('app_categories') }}" class="btn-commander">
+    <i class="fas fa-utensils me-2"></i> Commander maintenant
+  </a>
+</div>
+{% endblock %}
