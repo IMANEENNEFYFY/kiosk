@@ -33,6 +33,9 @@ class Produit
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Produit')]
+    private ?Espace $espace = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +109,18 @@ class Produit
     public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getEspace(): ?Espace
+    {
+        return $this->espace;
+    }
+
+    public function setEspace(?Espace $espace): static
+    {
+        $this->espace = $espace;
 
         return $this;
     }

@@ -1,91 +1,57 @@
+{# templates/produit/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-  {{ parent() }}
-  <style>
-    .products-header {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{{ asset('images/categories/' ~ categorie.image) }}');
-      background-size: cover;
-      background-position: center;
-      color: white;
-      padding: 4rem 0;
-      margin-bottom: 3rem;
-      text-align: center;
-    }
-
-    .product-card {
-      margin-bottom: 2rem;
-      border: none;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .product-img {
-      height: 180px;
-      object-fit: cover;
-    }
-
-    .product-price {
-      color: var(--primary-color);
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-
-    .btn-add-to-cart {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-add-to-cart:hover {
-      background: var(--dark-color);
-    }
-
-    .btn-view-cart {
-      margin-bottom: 2rem;
-      float: right;
-    }
-  </style>
-{% endblock %}
+{% block title %}Produits - {{ espace.nom }}{% endblock %}
 
 {% block body %}
-<div class="products-header">
-  <div class="container">
-    <h1 class="display-4">{{ categorie.nom }}</h1>
-  </div>
-</div>
-
-<div class="container">
-  <div class="text-end mb-4">
-    <a href="{{ path('afficher_panier') }}" class="btn btn-secondary btn-view-cart">
-      🛒 Voir le panier
-    </a>
-  </div>
-
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for produit in produits %}
-    <div class="col">
-      <div class="card product-card h-100">
-        <img src="{{ asset('images/produits/' ~ produit.image) }}" class="card-img-top product-img" alt="{{ produit.nom }}">
-        <div class="card-body">
-          <h5 class="card-title">{{ produit.nom }}</h5>
-          <p class="card-text">{{ produit.description|slice(0, 80) ~ '...' }}</p>
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="fw-bold">{{ categorie.nom }} <small class="text-muted">({{ espace.nom }})</small></h1>
+            <a href="{{ path('afficher_panier') }}" class="btn btn-primary btn-lg">Voir Panier</a>
         </div>
-        <div class="card-footer bg-white border-0">
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="product-price">{{ produit.prix|format_currency('EUR') }}</span>
-            <a href="{{ path('ajouter_au_panier', {'id': produit.id}) }}" class="btn btn-add-to-cart">
-              <i class="fas fa-cart-plus"></i> Ajouter
-            </a>
-          </div>
+
+        <div class="row">
+            {% for produit in produits %}
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if produit.image %}
+                            <img src="{{ asset('uploads/produits/' ~ produit.image) }}" class="card-img-top" alt="{{ produit.nom }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title">{{ produit.nom }}</h5>
+                            <p class="card-text">{{ produit.description|default('') }}</p>
+                            <p class="h4 text-success">{{ produit.prix }} €</p>
+                            <form action="{{ path('ajouter_au_panier', {id: produit.id}) }}" method="POST">
+                                <button type="submit" class="btn btn-primary mt-2 w-100">Ajouter au panier</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        Aucun produit disponible dans cette catégorie.
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-      </div>
+
+        {% if categories|length > 1 %}
+            <div class="mt-5">
+                <h3>Autres catégories</h3>
+                <ul class="list-unstyled row">
+                    {% for cat in categories %}
+                        {% if cat.id != categorie.id %}
+                            <li class="col-sm-6 col-md-4 mb-2">
+                                <a href="{{ path('app_produits_par_categorie', {id: cat.id}) }}">
+                                    <i class="fas fa-tag me-1"></i>
+                                    {{ cat.nom }} ({{ cat.produits|filter(p => p.estDisponible)|length }} dispo)
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
     </div>
-    {% endfor %}
-  </div>
-</div>
 {% endblock %}

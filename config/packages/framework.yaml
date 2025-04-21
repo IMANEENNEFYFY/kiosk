@@ -1,15 +1,17 @@
-# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
+    session:
+        enabled: true
+        handler_id: null
+        storage_factory_id: session.storage.factory.native
+        cookie_secure: auto
+        cookie_samesite: lax
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        name: 'MYSESSIONID'
+        # Other available options you might want:
+        cookie_lifetime: 0
+        cookie_httponly: true
+        gc_maxlifetime: 1440
 
-    # Note that the session will be started ONLY if you read or write from it.
-    session: true
-
-    #esi: true
-    #fragments: true
-
-when@test:
-    framework:
-        test: true
-        session:
-            storage_factory_id: session.storage.factory.mock_file
+parameters:
+    app.espace.default: 'snack'

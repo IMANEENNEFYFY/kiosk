@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Service;
 
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\ProduitRepository;
 
@@ -10,13 +10,11 @@ class PanierService
     private $session;
     private $produitRepository;
 
-    public function __construct(SessionInterface $session, ProduitRepository $produitRepository)
+    public function __construct(RequestStack $requestStack, ProduitRepository $produitRepository)
     {
-        $this->session = $session;
+        $this->session = $requestStack->getSession();
         $this->produitRepository = $produitRepository;
     }
-
-   
 
     public function getPanier(): array
     {
@@ -50,46 +48,46 @@ class PanierService
 
         return $total;
     }
+
     public function viderPanier(): void
-{
-    $this->session->remove('panier');
-}
-// src/Service/PanierService.php
-
-public function ajouter(int $id, int $quantite = 1): void
-{
-    $panier = $this->session->get('panier', []);
-    
-    if (!empty($panier[$id])) {
-        $panier[$id] += $quantite;
-    } else {
-        $panier[$id] = $quantite;
+    {
+        $this->session->remove('panier');
     }
-    
-    $this->session->set('panier', $panier);
-}
 
-public function diminuer(int $id, int $quantite = 1): void
-{
-    $panier = $this->session->get('panier', []);
-    
-    if (!empty($panier[$id])) {
-        if ($panier[$id] > $quantite) {
-            $panier[$id] -= $quantite;
+    public function ajouter(int $id, int $quantite = 1): void
+    {
+        $panier = $this->session->get('panier', []);
+
+        if (!empty($panier[$id])) {
+            $panier[$id] += $quantite;
         } else {
-            unset($panier[$id]);
+            $panier[$id] = $quantite;
         }
-        $this->session->set('panier', $panier);
-    }
-}
 
-public function supprimer(int $id): void
-{
-    $panier = $this->session->get('panier', []);
-    
-    if (!empty($panier[$id])) {
-        unset($panier[$id]);
         $this->session->set('panier', $panier);
     }
-}
+
+    public function diminuer(int $id, int $quantite = 1): void
+    {
+        $panier = $this->session->get('panier', []);
+
+        if (!empty($panier[$id])) {
+            if ($panier[$id] > $quantite) {
+                $panier[$id] -= $quantite;
+            } else {
+                unset($panier[$id]);
+            }
+            $this->session->set('panier', $panier);
+        }
+    }
+
+    public function supprimer(int $id): void
+    {
+        $panier = $this->session->get('panier', []);
+
+        if (!empty($panier[$id])) {
+            unset($panier[$id]);
+            $this->session->set('panier', $panier);
+        }
+    }
 }

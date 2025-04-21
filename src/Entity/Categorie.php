@@ -31,6 +31,10 @@ class Categorie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[ORM\ManyToOne(targetEntity: Espace::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private Espace $espace;
+
     public function __construct()
     {
         $this->produits = new ArrayCollection();
@@ -103,6 +107,18 @@ class Categorie
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getEspace(): ?Espace
+    {
+        return $this->espace;
+    }
+
+    public function setEspace(?Espace $espace): static
+    {
+        $this->espace = $espace;
 
         return $this;
     }

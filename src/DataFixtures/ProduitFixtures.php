@@ -22,6 +22,8 @@ $boissons->setNom('Boissons')
         $nourriture->setNom('Nourriture')
         ->setImage('nourriture.jpg');
         $manager->persist($nourriture);
+
+        
     
         // Produits avec toutes les propriétés requises
         $produits = [

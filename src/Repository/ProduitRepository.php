@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Produit;
+use App\Entity\Espace;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,7 +16,29 @@ class ProduitRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Produit::class);
     }
-
+    public function findByEspace(int $espaceId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.categorie', 'c')
+            ->join('c.espace', 'e')
+            ->andWhere('e.id = :espaceId')
+            ->setParameter('espaceId', $espaceId)
+            ->getQuery()
+            ->getResult();
+    }
+    // src/Repository/CategorieRepository.php
+public function findWithAvailableProducts(Espace $espace): array
+{
+    return $this->createQueryBuilder('c')
+        ->leftJoin('c.produits', 'p')
+        ->andWhere('c.espace = :espace')
+        ->andWhere('p.estDisponible = true')
+        ->setParameter('espace', $espace)
+        ->groupBy('c.id')
+        ->having('COUNT(p.id) > 0')
+        ->getQuery()
+        ->getResult();
+}
     //    /**
     //     * @return Produit[] Returns an array of Produit objects
     //     */
