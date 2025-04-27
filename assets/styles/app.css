@@ -2,15 +2,18 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 
 :root {
-  --primary-color: #ff6b6b;
-  --secondary-color: #4ecdc4;
-  --dark-color: #292f36;
-  --light-color: #f7fff7;
+  --primary-color: #8B4513; /* Marron foncé */
+  --secondary-color: #D2B48C; /* Beige clair */
+  --dark-color: #3e2c1a; /* Texte couleur marron foncé */
+  --light-color: #fffaf0; /* Beige clair pour les éléments de texte */
+  --card-bg-color: #fdf6f0; /* Fond des cartes beige doux */
+  --btn-bg-color: #fffaf0; /* Fond bouton clair */
+  --btn-hover-color: #f5e4c3; /* Fond bouton au survol */
 }
 
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #f8f9fa;
+  background-color: var(--light-color); /* Fond général beige clair */
   color: var(--dark-color);
 }
 
@@ -18,6 +21,7 @@ body {
 .card {
   border: none;
   border-radius: 15px;
+  background-color: var(--card-bg-color); /* Fond des cartes */
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
@@ -26,4 +30,30 @@ body {
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Boutons */
+.btn {
+  background-color: var(--btn-bg-color); /* Bouton de fond clair */
+  color: var(--primary-color);
+  border: none;
+  border-radius: 50px;
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--btn-hover-color);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Autres éléments de texte */
+h1, h2, h3, h4 {
+  color: var(--dark-color); /* Texte en marron foncé */
+}
+
+p {
+  color: var(--dark-color);
 }

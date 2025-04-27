@@ -16,26 +16,78 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $numeroCommande = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
+    private ?\DateTimeInterface $date = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $statut = null;
 
     #[ORM\Column]
-    private ?float $montantTotal = null;
+    private ?float $total = null;
 
-    #[ORM\OneToMany(targetEntity: ElementCommande::class, mappedBy: 'commande', cascade: ['persist'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ticketPath = null;
+
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: ElementCommande::class)]
     private Collection $elements;
 
     public function __construct()
     {
-        $this->dateCreation = new \DateTime();
-        $this->numeroCommande = 'CMD-'.strtoupper(uniqid());
         $this->elements = new ArrayCollection();
     }
 
-    // Ajoutez ces méthodes
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
+        return $this;
+    }
+
+    public function getTotal(): ?float
+    {
+        return $this->total;
+    }
+
+    public function setTotal(float $total): static
+    {
+        $this->total = $total;
+        return $this;
+    }
+
+    public function getTicketPath(): ?string
+    {
+        return $this->ticketPath;
+    }
+
+    public function setTicketPath(?string $ticketPath): static
+    {
+        $this->ticketPath = $ticketPath;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ElementCommande>
+     */
     public function getElements(): Collection
     {
         return $this->elements;
@@ -49,60 +101,14 @@ class Commande
         }
         return $this;
     }
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
-    public function getNumeroCommande(): ?string
+    public function removeElement(ElementCommande $element): static
     {
-        return $this->numeroCommande;
-    }
-
-    public function setNumeroCommande(string $numeroCommande): static
-    {
-        $this->numeroCommande = $numeroCommande;
-
+        if ($this->elements->removeElement($element)) {
+            if ($element->getCommande() === $this) {
+                $element->setCommande(null);
+            }
+        }
         return $this;
     }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    public function getMontantTotal(): ?float
-    {
-        return $this->montantTotal;
-    }
-
-    public function setMontantTotal(float $montantTotal): static
-    {
-        $this->montantTotal = $montantTotal;
-
-        return $this;
-    }
-    // src/Entity/Commande.php
-#[ORM\Column(type: 'string', length: 255, nullable: true)]
-private ?string $ticketPath = null;
-
-// Ajoutez les getter et setter
-public function getTicketPath(): ?string
-{
-    return $this->ticketPath;
-}
-
-public function setTicketPath(?string $ticketPath): self
-{
-    $this->ticketPath = $ticketPath;
-    return $this;
-}
-
 }

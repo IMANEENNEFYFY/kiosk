@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Scan de la carte Pepayee - {{ espace.nom }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .scan-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .scan-box {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .qr-scanner {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .instructions {
+            margin-top: 1rem;
+            color: #666;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="scan-container">
+        <h1 class="mb-4">Scan de la carte Pepayee</h1>
+        
+        {% if solde_insuffisant is defined and solde_insuffisant %}
+            <div class="alert alert-danger">
+                Solde insuffisant. Votre solde est de 0 €.
+            </div>
+        {% endif %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="scan-box">
+            <div class="qr-scanner">
+                <form action="{{ path('app_verifier_carte') }}" method="POST" id="scanForm">
+                    <div class="mb-3">
+                        <label for="code_carte" class="form-label">Code QR de la carte</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="code_carte" 
+                               name="code_carte" 
+                               required 
+                               autofocus
+                               placeholder="Scannez votre carte ou entrez le code manuellement">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                </form>
+            </div>
+
+            <div class="instructions">
+                <p class="mt-3">
+                    <i class="fas fa-info-circle"></i>
+                    Veuillez scanner le code QR de votre carte Pepayee ou entrer le code manuellement
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('code_carte').focus();
+
+            document.getElementById('scanForm').addEventListener('submit', function(e) {
+                const codeCarte = document.getElementById('code_carte').value;
+                if (!codeCarte) {
+                    e.preventDefault();
+                    alert('Veuillez scanner votre carte ou entrer le code manuellement');
+                }
+            });
+        });
+    </script>
+{% endblock %}

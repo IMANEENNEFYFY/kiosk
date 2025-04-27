@@ -22,13 +22,26 @@
         }
         th { text-align: left; }
         .total { font-weight: bold; border-top: 1px dashed #000; }
+        .barcode-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .barcode-container svg {
+            height: 60px;
+            width: 100%;
+        }
+        .barcode-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h3>MON RESTAURANT</h3>
         <p>Ticket #{{ commande.id }}</p>
-        <p>{{ commande.dateCreation|date('d/m/Y H:i') }}</p>
+        <p>{{ commande.date|date('d/m/Y H:i') }}</p>
     </div>
 
     <table>
@@ -40,40 +53,24 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in commande.elements %}
+            {% for element in commande.elements %}
             <tr>
-                <td>{{ item.produit.nom }}</td>
-                <td>{{ item.quantite }}</td>
-                <td>{{ (item.prixUnitaire * item.quantite)|format_currency('EUR') }}</td>
+                <td>{{ element.produit.nom }}</td>
+                <td>{{ element.quantite }}</td>
+                <td>{{ (element.prixUnitaire * element.quantite)|format_currency('EUR') }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <p class="total">Total: {{ commande.montantTotal|format_currency('EUR') }}</p>
+    <p class="total">Total: {{ commande.total|format_currency('EUR') }}</p>
 
-   
     <div class="barcode-container">
-    {{ barcode_svg|raw }}
-    <div class="barcode-text">CMD-{{ commande.id }}</div>
-</div>
+        {{ barcode_svg|raw }}
+        <div class="barcode-text">CMD-{{ commande.id }}</div>
+    </div>
 
-<style>
-    .barcode-container {
-        text-align: center;
-        margin: 20px 0;
-    }
-    .barcode-container svg {
-        height: 60px;
-        width: 100%;
-    }
-    .barcode-text {
-        font-family: 'Courier New', monospace;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-</style>
- <div class="footer">
+    <div class="footer">
         Merci pour votre commande !
     </div>
 </body>

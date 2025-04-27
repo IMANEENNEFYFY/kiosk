@@ -3,6 +3,48 @@
 
 {% block title %}Produits - {{ espace.nom }}{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        body {
+            background-color: #f5f5dc; /* beige */
+        }
+
+        .card {
+            background-color: #fff8f0; /* beige très clair */
+            border: 1px solid #d2b48c; /* brun sable */
+        }
+
+        .card-title, .card-text, .h4,
+        h1, h3, .alert-info {
+            color: #5d4037; /* marron foncé */
+        }
+
+        .btn-primary {
+            background-color: #8b5e3c; /* marron clair */
+            border-color: #8b5e3c;
+        }
+
+        .btn-primary:hover {
+            background-color: #a47148; /* marron plus clair */
+            border-color: #a47148;
+        }
+
+        .alert-info {
+            background-color: #faebd7; /* beige rosé */
+        }
+
+        a {
+            color: #8b5e3c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #a47148;
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">

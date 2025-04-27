@@ -2,31 +2,53 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Ticket de commande #{{ commande.id }}</title>
+    <title>Ticket #{{ commande.id }}</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        h1 { color: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-        .total { font-weight: bold; }
+        body { 
+            font-family: 'Courier New', monospace;
+            width: 80mm;
+            margin: 0 auto;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .header, .footer {
+            text-align: center;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th { text-align: left; }
+        .total { font-weight: bold; border-top: 1px dashed #000; }
+        .barcode-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .barcode-container svg {
+            height: 60px;
+            width: 100%;
+        }
+        .barcode-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>Commande validée !</h1>
-    <h2>Merci pour votre commande</h2>
+    <div class="header">
+        <h3>MON RESTAURANT</h3>
+        <p>Ticket #{{ commande.id }}</p>
+        <p>{{ commande.date|date('d/m/Y H:i') }}</p>
+    </div>
 
-    <p><strong>Numéro de commande :</strong> #{{ commande.id }}</p>
-    <p><strong>Date :</strong> {{ commande.dateCreation|date('d/m/Y H:i') }}</p>
-    <p><strong>Montant total :</strong> {{ commande.montantTotal|format_currency('EUR') }}</p>
-
-    <h3>Détails de la commande :</h3>
     <table>
         <thead>
             <tr>
-                <th>Produit</th>
-                <th>Quantité</th>
-                <th>Prix unitaire</th>
-                <th>Total</th>
+                <th>Article</th>
+                <th>Qte</th>
+                <th>Prix</th>
             </tr>
         </thead>
         <tbody>
@@ -34,13 +56,21 @@
             <tr>
                 <td>{{ element.produit.nom }}</td>
                 <td>{{ element.quantite }}</td>
-                <td>{{ element.prixUnitaire|format_currency('EUR') }}</td>
                 <td>{{ (element.prixUnitaire * element.quantite)|format_currency('EUR') }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <p class="total">Total : {{ commande.montantTotal|format_currency('EUR') }}</p>
+    <p class="total">Total: {{ commande.total|format_currency('EUR') }}</p>
+
+    <div class="barcode-container">
+        {{ barcode_svg|raw }}
+        <div class="barcode-text">CMD-{{ commande.id }}</div>
+    </div>
+
+    <div class="footer">
+        Merci pour votre commande !
+    </div>
 </body>
 </html>

@@ -1,48 +1,98 @@
-<h1>Mon Panier</h1>
+{% extends 'base.html.twig' %}
 
-{% if panier is empty %}
-    <p>Votre panier est vide.</p>
-{% else %}
-    <table style="margin-bottom: 20px; width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Produit</th>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Quantité</th>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Prix unitaire</th>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Total</th>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in panier %}
-                <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ item.produit.nom }}</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
-                        <span style="margin: 0 5px;">{{ item.quantite }}</span>
-                        <a href="{{ path('panier_diminuer', {'id': item.produit.id}) }}" style="margin-right: 5px; text-decoration: none;">-</a>
-                        <a href="{{ path('panier_ajouter', {'id': item.produit.id}) }}" style="text-decoration: none;">+</a>
-                    </td>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ item.produit.prix|number_format(2, ',', ' ') }} €</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">{{ (item.produit.prix * item.quantite)|number_format(2, ',', ' ') }} €</td>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
-                        <a href="{{ path('panier_supprimer', {'id': item.produit.id}) }}" style="color: #dc3545; text-decoration: none;">×</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block title %}Mon Panier{% endblock %}
 
-    <h3 style="margin: 20px 0;">Total : {{ total|number_format(2, ',', ' ') }} €</h3>
+{% block body %}
+    <div class="container mt-4">
+        <h1>Mon Panier</h1>
 
-    <div style="display: flex; justify-content: space-between; margin-top: 30px;">
-        <a href="{{ path('app_categories') }}" style="padding: 8px 16px; background-color: #f8f9fa; color: #0d6efd; text-decoration: none; border: 1px solid #dee2e6; border-radius: 4px;">
-            ← Continuer mes achats
-        </a>
-        
-        <form action="{{ path('valider_commande') }}" method="post">
-            <button type="submit" style="padding: 8px 16px; background-color: #198754; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                Valider la commande
-            </button>
-        </form>
+        {% if produits|length > 0 %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in produits %}
+                        <tr>
+                            <td>{{ item.produit.nom }}</td>
+                            <td>{{ item.produit.prix|number_format(2) }} €</td>
+                            <td>
+                                <div class="input-group" style="max-width: 150px;">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity({{ item.produit.id }}, -1)">-</button>
+                                    <input type="number" class="form-control text-center" value="{{ item.quantite }}" 
+                                           onchange="updateQuantity({{ item.produit.id }}, 0, this.value)">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity({{ item.produit.id }}, 1)">+</button>
+                                </div>
+                            </td>
+                            <td>{{ (item.produit.prix * item.quantite)|number_format(2) }} €</td>
+                            <td>
+                                <a href="{{ path('panier_supprimer', {'id': item.produit.id}) }}" 
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total :</strong></td>
+                        <td colspan="2"><strong>{{ total|number_format(2) }} €</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ path('panier_vider') }}" 
+                   class="btn btn-danger"
+                   onclick="return confirm('Êtes-vous sûr de vouloir vider le panier ?')">
+                    <i class="fas fa-trash-alt me-2"></i>Vider le panier
+                </a>
+                <form action="{{ path('valider_commande') }}" method="post">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check me-2"></i>Passer la commande
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Votre panier est vide
+            </div>
+            <a href="{{ path('app_categories') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>Retour aux catégories
+            </a>
+        {% endif %}
     </div>
-{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function updateQuantity(productId, change, newValue = null) {
+            const url = "{{ path('panier_ajouter', {'id': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER', productId);
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la mise à jour de la quantité:', error);
+            });
+        }
+    </script>
+{% endblock %}

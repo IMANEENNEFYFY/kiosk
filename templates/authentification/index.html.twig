@@ -1,0 +1,6 @@
+<h2>Authentification par carte</h2>
+
+<form method="post" action="{{ path('verifier_code_client') }}">
+    <input type="text" name="code" placeholder="Scannez votre carte" autofocus required />
+    <button type="submit">Valider</button>
+</form>

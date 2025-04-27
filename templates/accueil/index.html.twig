@@ -2,7 +2,26 @@
 
 {% block stylesheets %}
   {{ parent() }}
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #8B4513; /* Marron foncé */
+      --secondary-color: #D2B48C; /* Beige clair */
+      --dark-color: #3e2c1a; /* Texte couleur marron foncé */
+      --light-color: #fffaf0; /* Beige clair pour les éléments de texte */
+      --card-bg-color: #fdf6f0; /* Fond des cartes beige doux */
+      --btn-bg-color: #fffaf0; /* Fond bouton clair */
+      --btn-hover-color: #f5e4c3; /* Fond bouton au survol */
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light-color); /* Fond général beige clair */
+      color: var(--dark-color);
+      margin: 0;
+      padding: 0;
+    }
+
     .hero-section {
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       height: 100vh;
@@ -11,40 +30,96 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      color: white;
+      color: #fff;
+      animation: fadeIn 1.5s ease-in-out;
+      padding: 20px;
     }
-    
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Style du logo */
     .logo {
-      width: 200px;
+      width: 350px; /* Agrandi le logo à 350px */
+      max-width: 90vw; /* Assure que le logo ne dépasse pas 90% de la largeur de l'écran */
       margin-bottom: 2rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      transition: transform 0.3s ease;
     }
-    
+
+    .logo:hover {
+      transform: scale(1.08); /* Un léger effet de zoom au survol */
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #fffaf0;
+    }
+
     .btn-commander {
-      background: white;
+      background: var(--btn-bg-color);
       color: var(--primary-color);
       border: none;
-      padding: 15px 40px;
-      font-size: 1.5rem;
+      padding: 16px 42px;
+      font-size: 1.4rem;
       border-radius: 50px;
       font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
     }
-    
+
     .btn-commander:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      background-color: var(--btn-hover-color);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
     }
+
+    /* Style des cartes */
+    .card {
+      border: none;
+      border-radius: 15px;
+      background-color: var(--card-bg-color); /* Fond des cartes beige doux */
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    /* Autres éléments de texte */
+    h1, h2, h3, h4 {
+      color: var(--dark-color); /* Texte en marron foncé */
+    }
+
+    p {
+      color: var(--dark-color);
+    }
+
   </style>
 {% endblock %}
 
 {% block body %}
 <div class="hero-section">
-  <img src="{{ asset('images/logo.png') }}" alt="Logo Restaurant" class="logo">
-  <h1 class="display-4 mb-4">Bienvenue au Restaurant</h1>
+  <img src="{{ asset('images/Logo.png') }}" alt="Logo du restaurant" class="logo">
+  <h1>Bienvenue au <strong>Cassis_Food</strong></h1>
   <a href="{{ path('app_categories') }}" class="btn-commander">
-    <i class="fas fa-utensils me-2"></i> Commander maintenant
+    <i class="fas fa-utensils"></i> Commander maintenant
   </a>
+</div>
+
+<div class="content">
+  <!-- Contenu de la page supplémentaire ici -->
+  <p>Bienvenue dans notre restaurant ! Découvrez notre menu et profitez de l'expérience.</p>
 </div>
 {% endblock %}

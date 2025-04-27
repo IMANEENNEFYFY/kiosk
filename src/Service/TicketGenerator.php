@@ -6,6 +6,7 @@ namespace App\Service;
 use Knp\Snappy\Pdf;
 use Twig\Environment;
 use App\Entity\Commande;
+use Picqer\Barcode\BarcodeGeneratorSVG;
 
 class TicketGenerator
 {
@@ -20,8 +21,18 @@ class TicketGenerator
 
     public function generate(Commande $commande): string
     {
+        // Générer le code-barres
+        $generator = new BarcodeGeneratorSVG();
+        $barcode = $generator->getBarcode(
+            (string)$commande->getId(),
+            $generator::TYPE_CODE_128,
+            2,
+            50
+        );
+
         $html = $this->twig->render('commande/ticket.html.twig', [
-            'commande' => $commande
+            'commande' => $commande,
+            'barcode_svg' => $barcode
         ]);
 
         $filename = 'ticket_'.$commande->getId().'.pdf';

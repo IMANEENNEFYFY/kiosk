@@ -17,114 +17,247 @@
       font-weight: 500;
     }
 
-    .category-card {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      padding: 20px;
-      transition: transform 0.3s, box-shadow 0.3s;
-      height: 100%;
+    .user-info {
+      background-color: #f8f9fa;
+      padding: 10px 20px;
+      border-radius: 25px;
+      display: inline-block;
+      margin-left: 15px;
+      font-size: 0.9rem;
+    }
+
+    .user-info i {
+      margin-right: 5px;
+      color: var(--primary-color);
+    }
+
+    .main-container {
       display: flex;
-      flex-direction: column;
+      min-height: calc(100vh - 200px);
+    }
+
+    .categories-sidebar {
+      width: 300px;
+      background: #f8f9fa;
+      padding: 20px;
+      border-right: 1px solid #dee2e6;
+    }
+
+    .products-container {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .category-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
       justify-content: space-between;
+      align-items: center;
     }
 
-    .category-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    .category-item:hover {
+      background-color: #e9ecef;
     }
 
-    .category-img-container {
-      text-align: center;
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    .category-img {
-      max-height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      width: 100%;
-    }
-
-    .no-image-placeholder {
-      background-color: #f0f0f0;
-      color: #999;
-      border: 2px dashed #ccc;
-      border-radius: 12px;
-      padding: 40px;
-      text-align: center;
-      font-style: italic;
-      font-size: 0.95rem;
-    }
-
-    .btn-category {
+    .category-item.active {
       background-color: var(--primary-color);
       color: white;
-      border-radius: 30px;
-      display: block;
-      text-align: center;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .add-to-cart {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
-    .btn-category:hover {
+    .add-to-cart:hover {
       background-color: #0056b3;
+    }
+
+    .cart-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #007bff;
       color: white;
+      padding: 15px;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .cart-icon:hover {
+      background-color: #0056b3;
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #ff4444;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: bold;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .cart-icon i {
+      font-size: 24px;
+    }
+
+    .cart-icon a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .no-products {
+      text-align: center;
+      padding: 40px;
+      color: #6c757d;
     }
   </style>
 {% endblock %}
 
 {% block body %}
-<div class="categories-container py-5">
-  <div class="container">
-    <div class="espace-indicator mb-4">
-      <i class="fas fa-map-marker-alt me-2"></i> {{ espace.nom }}
-    </div>
+<div class="main-container">
+  <div class="categories-sidebar">
+    <h3 class="mb-4">Catégories</h3>
+    {% for categorie in categories %}
+      <div class="category-item {% if selectedCategory and selectedCategory.id == categorie.id %}active{% endif %}"
+           onclick="loadProducts({{ categorie.id }})">
+        {{ categorie.nom }}
+        <span class="badge bg-secondary">{{ categorie.produits|length }}</span>
+      </div>
+    {% endfor %}
+  </div>
 
-    <h1 class="text-center mb-5">Nos Catégories</h1>
-
-    {% if categories|length > 0 %}
-      <div class="row g-4">
-        {% for categorie in categories %}
-          <div class="col-sm-6 col-md-4">
-            <div class="category-card h-100">
-              <div class="category-img-container">
-                {% if categorie.image %}
-                  <img src="{{ asset('images/categories/' ~ categorie.image) }}" 
-                       class="category-img"
-                       alt="{{ categorie.nom }}"
-                       onerror="this.style.display='none'; document.getElementById('missing-image-{{ categorie.id }}').style.display='block'">
-                  <div id="missing-image-{{ categorie.id }}" 
-                       class="no-image-placeholder" 
-                       style="display: none;">
-                    Image non disponible
-                  </div>
+  <div class="products-container">
+    {% if selectedCategory %}
+      <h2 class="mb-4">{{ selectedCategory.nom }}</h2>
+      {% if selectedCategory.produits|length > 0 %}
+        <div class="row">
+          {% for produit in selectedCategory.produits %}
+            <div class="col-md-4 mb-4">
+              <div class="product-card">
+                {% if produit.image %}
+                  <img src="{{ asset('images/produits/' ~ produit.image) }}" 
+                       class="product-image" 
+                       alt="{{ produit.nom }}">
                 {% else %}
-                  <div class="no-image-placeholder">
-                    Aucune image définie
+                  <div class="product-image bg-light d-flex align-items-center justify-content-center">
+                    <i class="fas fa-image fa-3x text-muted"></i>
                   </div>
                 {% endif %}
-              </div>
-              <div class="category-body text-center">
-                <h3 class="mb-3">{{ categorie.nom }}</h3>
-                <p class="text-muted small">
-                  {{ categorie.produits|length }} produit(s) disponible(s)
-                </p>
-                <a href="{{ path('app_produits_par_categorie', {'id': categorie.id}) }}" 
-                   class="btn btn-category mt-3">
-                  <i class="fas fa-utensils me-2"></i> Voir les produits
-                </a>
+                <h3 class="product-title">{{ produit.nom }}</h3>
+                <p class="product-price">{{ produit.prix|number_format(2) }} €</p>
+                <button class="add-to-cart" onclick="addToCart({{ produit.id }})">
+                  <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+                </button>
               </div>
             </div>
-          </div>
-        {% endfor %}
-      </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Aucun produit disponible dans cette catégorie
+        </div>
+      {% endif %}
     {% else %}
-      <div class="alert alert-info text-center mt-5">
-        <i class="fas fa-info-circle me-2"></i>
-        Aucune catégorie disponible dans cet espace
+      <div class="no-products">
+        <i class="fas fa-utensils fa-3x mb-3"></i>
+        <h3>Sélectionnez une catégorie pour voir les produits</h3>
       </div>
     {% endif %}
   </div>
+
+  <div class="cart-icon">
+    <a href="{{ path('app_panier') }}">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="cart-count" id="cart-count">{{ app.session.get('panier')|length }}</span>
+    </a>
+  </div>
 </div>
+
+<script>
+function loadProducts(categoryId) {
+  console.log('Chargement des produits pour la catégorie:', categoryId);
+  window.location.href = "{{ path('app_categories_show', {'id': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER', categoryId);
+}
+
+function addToCart(productId) {
+  console.log('Ajout au panier du produit:', productId);
+  fetch("{{ path('panier_ajouter', {'id': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER', productId), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Réponse du serveur:', data);
+    document.querySelector('.cart-count').textContent = data.cartCount;
+    // Afficher une notification
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-success position-fixed top-0 end-0 m-3';
+    notification.style.zIndex = '1000';
+    notification.textContent = 'Produit ajouté au panier';
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+  })
+  .catch(error => {
+    console.error('Erreur lors de l\'ajout au panier:', error);
+  });
+}
+</script>
 {% endblock %}
