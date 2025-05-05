@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Solde insuffisant{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .error-container {
+            background-color: #f5ecd7;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(169, 124, 80, 0.2);
+        }
+        .error-icon {
+            color: #a97c50;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .error-title {
+            color: #7c4a02;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        .error-message {
+            color: #5d4037;
+            margin-bottom: 2rem;
+        }
+        .btn-retour {
+            background-color: #a97c50;
+            border-color: #a97c50;
+            color: #fffbe6;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        .btn-retour:hover {
+            background-color: #8b6842;
+            border-color: #8b6842;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="error-container text-center">
+        <i class="fas fa-exclamation-circle error-icon"></i>
+        <h2 class="error-title">Solde insuffisant</h2>
+        <div class="error-message">
+            <p>Désolé, votre carte n'a pas assez de crédit pour passer une commande.</p>
+            
+        </div>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ path('app_scan_carte') }}" class="btn btn-retour">
+                <i class="fas fa-arrow-left me-2"></i>Retour au scan
+            </a>
+         
+        </div>
+    </div>
+</div>
+{% endblock %} 

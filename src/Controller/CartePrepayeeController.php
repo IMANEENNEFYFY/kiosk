@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\ElementCommande;
 
 class CartePrepayeeController extends AbstractController
 {
@@ -43,16 +44,16 @@ class CartePrepayeeController extends AbstractController
 
         if ($carte->getSolde() <= 0) {
             $request->getSession()->clear();
-            return $this->render('carte_prepayee/scan.html.twig', [
-                'espace' => $espace,
-                'solde_insuffisant' => true
-            ]);
+            return $this->redirectToRoute('app_carte_sans_solde');
         }
 
         $request->getSession()->set('carte_prepayee_id', $carte->getId());
         $request->getSession()->set('carte_prepayee_solde', $carte->getSolde());
+        $request->getSession()->set('carte_prepayee_nom', $carte->getNom());
+        $request->getSession()->set('carte_prepayee_prenom', $carte->getPrenom());
 
-        return $this->redirectToRoute('app_categorie');
+        // Utiliser la bonne route (au pluriel)
+        return $this->redirectToRoute('app_confirmation_carte');
     }
 
     #[Route('/confirmation-carte', name: 'app_confirmation_carte')]
@@ -73,26 +74,26 @@ class CartePrepayeeController extends AbstractController
     }
 
     #[Route('/valider-carte', name: 'app_valider_carte', methods: ['POST'])]
-public function validerCarte(Request $request): Response
-{
-    if (!$request->getSession()->has('carte_prepayee_id')) {
-        return $this->redirectToRoute('app_scan_carte');
+    public function validerCarte(Request $request): Response
+    {
+        if (!$request->getSession()->has('carte_prepayee_id')) {
+            return $this->redirectToRoute('app_scan_carte');
+        }
+
+        $solde = $request->getSession()->get('carte_prepayee_solde');
+
+        if ($solde <= 0) {
+            $this->addFlash('error', 'Solde insuffisant pour valider.');
+            return $this->redirectToRoute('solde-insuffisant');
+        }
+
+        $this->addFlash('success', sprintf(
+            'Bienvenue %s %s ! Votre solde est de %.2f €',
+            $request->getSession()->get('carte_prepayee_prenom'),
+            $request->getSession()->get('carte_prepayee_nom'),
+            $solde
+        ));
+
+        return $this->redirectToRoute('app_accueil');
     }
-
-    $solde = $request->getSession()->get('carte_prepayee_solde');
-
-    if ($solde <= 0) {
-        $this->addFlash('error', 'Solde insuffisant pour valider.');
-        return $this->redirectToRoute('app_scan_carte');
-    }
-
-    $this->addFlash('success', sprintf(
-        'Bienvenue %s %s ! Votre solde est de %.2f €',
-        $request->getSession()->get('carte_prepayee_prenom'),
-        $request->getSession()->get('carte_prepayee_nom'),
-        $solde
-    ));
-
-    return $this->redirectToRoute('app_accueil');
-}
-}
+} 

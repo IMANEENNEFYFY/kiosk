@@ -26,3 +26,7 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+
+    App\Service\TicketGenerator:
+        arguments:
+            $ticketDir: '%kernel.project_dir%/public/tickets'

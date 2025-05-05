@@ -3,3 +3,7 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+solde_insuffisant:
+    path: /solde-insuffisant
+    controller: App\Controller\AccessController::soldeInsuffisant

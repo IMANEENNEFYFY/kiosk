@@ -179,7 +179,7 @@
         <span class="badge bg-secondary">{{ categorie.produits|length }}</span>
       </div>
     {% endfor %}
-  </div>
+    </div>
 
   <div class="products-container">
     {% if selectedCategory %}
@@ -203,13 +203,13 @@
                 <button class="add-to-cart" onclick="addToCart({{ produit.id }})">
                   <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
                 </button>
-              </div>
             </div>
-          {% endfor %}
-        </div>
-      {% else %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
         <div class="alert alert-info">
-          <i class="fas fa-info-circle me-2"></i>
+        <i class="fas fa-info-circle me-2"></i>
           Aucun produit disponible dans cette catégorie
         </div>
       {% endif %}

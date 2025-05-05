@@ -1,69 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Confirmation de la carte - {{ espace.nom }}{% endblock %}
+{% block title %}Confirmation de la carte{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
+{% block head %}
     <style>
-        .confirmation-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        /* Style personnalisé pour le thème marron beige */
+        body {
+            background-color: #f5f5f0; /* Beige clair */
+            color: #3e2a47; /* Marron foncé */
         }
 
-        .user-info {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .card {
+            background-color: #d8c2a6; /* Marron beige pour la carte */
+            border: 1px solid #b29b7d; /* Bordure marron doux */
         }
 
-        .user-info p {
-            margin: 10px 0;
-            font-size: 1.1em;
-        }
-
-        .btn-valider {
-            background-color: var(--primary-color);
+        .card-header {
+            background-color: #b29b7d; /* Tête de la carte en marron plus foncé */
             color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
         }
 
-        .btn-valider:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
+        .btn-success {
+            background-color: #3e2a47; /* Boutons en marron foncé */
+            border-color: #3e2a47;
         }
 
-        .solde {
-            font-size: 1.3em;
-            color: var(--primary-color);
-            font-weight: bold;
+        .btn-success:hover {
+            background-color: #4e3b55; /* Hover du bouton en marron plus foncé */
+        }
+
+        a.btn-link {
+            color: #3e2a47; /* Liens en marron foncé */
+        }
+
+        a.btn-link:hover {
+            color: #4e3b55; /* Hover des liens */
         }
     </style>
 {% endblock %}
 
 {% block body %}
-<div class="confirmation-container">
-    <h1 class="text-center mb-4">Confirmation de la carte</h1>
-    
-    <div class="user-info">
-        <p><strong>Nom :</strong> {{ nom }}</p>
-        <p><strong>Prénom :</strong> {{ prenom }}</p>
-        <p><strong>Solde :</strong> <span class="solde">{{ solde|number_format(2) }} €</span></p>
-    </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4 class="mb-0">Carte validée avec succès</h4>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-4">Informations de la carte</h5>
+                    
+                    <div class="mb-3">
+                        <p class="mb-1"><strong>Nom :</strong> {{ nom }}</p>
+                        <p class="mb-1"><strong>Prénom :</strong> {{ prenom }}</p>
+                        <p class="mb-3"><strong>Solde disponible :</strong> {{ solde }} €</p>
+                    </div>
 
-    <div class="text-center">
-        <form action="{{ path('app_valider_carte') }}" method="POST">
-            <button type="submit" class="btn btn-valider">
-                <i class="fas fa-check-circle me-2"></i>Valider et continuer
-            </button>
-        </form>
+                    <form action="{{ path('app_valider_carte') }}" method="POST" class="mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            Valider la carte
+                        </button>
+                    </form>
+
+                    <a href="{{ path('app_scan_carte') }}" class="btn btn-link mt-3">
+                        Annuler et scanner une autre carte
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

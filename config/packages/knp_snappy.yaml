@@ -2,7 +2,7 @@
 knp_snappy:
     pdf:
         enabled: true
-        binary: '%env(WKHTMLTOPDF_PATH)%'
+        binary: 'C:/wkhtmltopdf/bin/wkhtmltopdf.exe'
         options:
             encoding: 'utf-8'
             margin-top: 10

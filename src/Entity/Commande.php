@@ -31,6 +31,10 @@ class Commande
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: ElementCommande::class)]
     private Collection $elements;
 
+    #[ORM\ManyToOne(targetEntity: CartePrepayee::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?CartePrepayee $cartePrepayee = null;
+
     public function __construct()
     {
         $this->elements = new ArrayCollection();
@@ -82,6 +86,17 @@ class Commande
     public function setTicketPath(?string $ticketPath): static
     {
         $this->ticketPath = $ticketPath;
+        return $this;
+    }
+
+    public function getCartePrepayee(): ?CartePrepayee
+    {
+        return $this->cartePrepayee;
+    }
+
+    public function setCartePrepayee(?CartePrepayee $cartePrepayee): static
+    {
+        $this->cartePrepayee = $cartePrepayee;
         return $this;
     }
 

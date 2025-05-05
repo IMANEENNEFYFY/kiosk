@@ -6,12 +6,13 @@
 {% block stylesheets %}
     <style>
         body {
-            background-color: #f5f5dc; /* beige */
+            background-color: #f5ecd7; /* beige doux */
         }
 
         .card {
             background-color: #fff8f0; /* beige très clair */
-            border: 1px solid #d2b48c; /* brun sable */
+            border: 1px solid #bfa074; /* marron/beige */
+            box-shadow: 0 2px 8px #e2c9a0;
         }
 
         .card-title, .card-text, .h4,
@@ -19,28 +20,57 @@
             color: #5d4037; /* marron foncé */
         }
 
-        .btn-primary {
-            background-color: #8b5e3c; /* marron clair */
-            border-color: #8b5e3c;
+        .btn-primary, .btn-panier {
+            background-color: #a97c50; /* marron/beige */
+            border-color: #a97c50;
+            color: #fffbe6;
+        }
+        .btn-primary:hover, .btn-panier:hover {
+            background-color: #8b6842;
+            border-color: #8b6842;
+            color: #fff;
         }
 
-        .btn-primary:hover {
-            background-color: #a47148; /* marron plus clair */
-            border-color: #a47148;
+        .btn-chariot {
+            background-color: #a97c50; /* marron/beige */
+            color: #fffbe6;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 18px;
+            font-size: 1.5rem;
+            transition: background 0.2s;
+        }
+        .btn-chariot:hover {
+            background-color: #8b6842;
+            color: #fff;
+        }
+
+        /* ✅ Styliser les icônes dans les boutons */
+        .btn-panier i, .btn-chariot i {
+            color: #fffbe6; /* beige clair */
+            font-size: 1.5rem;
+            transition: color 0.2s;
+        }
+        .btn-panier:hover i, .btn-chariot:hover i {
+            color: #fff;
         }
 
         .alert-info {
             background-color: #faebd7; /* beige rosé */
+            color: #5d4037;
         }
 
         a {
             color: #8b5e3c;
             text-decoration: none;
         }
-
         a:hover {
             color: #a47148;
             text-decoration: underline;
+        }
+
+        .fw-bold, h1, h3 {
+            color: #7c4a02;
         }
     </style>
 {% endblock %}
@@ -49,7 +79,10 @@
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="fw-bold">{{ categorie.nom }} <small class="text-muted">({{ espace.nom }})</small></h1>
-            <a href="{{ path('afficher_panier') }}" class="btn btn-primary btn-lg">Voir Panier</a>
+            <!-- Bouton Voir Panier avec icône de chariot -->
+            <a href="{{ path('afficher_panier') }}" class="btn btn-panier btn-lg">
+                <i class="fas fa-shopping-cart me-2"></i> Voir Panier
+            </a>
         </div>
 
         <div class="row">
@@ -64,14 +97,16 @@
                             <p class="card-text">{{ produit.description|default('') }}</p>
                             <p class="h4 text-success">{{ produit.prix }} €</p>
                             <form action="{{ path('ajouter_au_panier', {id: produit.id}) }}" method="POST">
-                                <button type="submit" class="btn btn-primary mt-2 w-100">Ajouter au panier</button>
+                                <button type="submit" class="btn btn-chariot mt-2 w-100">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
                             </form>
                         </div>
                     </div>
                 </div>
             {% else %}
                 <div class="col-12">
-                    <div class="alert alert-info">
+                    <div class="alert alert-info text-center">
                         Aucun produit disponible dans cette catégorie.
                     </div>
                 </div>
